@@ -7,7 +7,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
         $stateProvider
             .state('home', {
                 url: "/index",
-                template: 'index',
+                template: 'index <div ng-click="swipe()">go dian</div>',
                 controller: 'HomeController'
             });
 
@@ -16,7 +16,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
         $stateProvider
             .state('dian', {
                 url: "/dian",
-                template: 'dian',
+                template: 'dian <div ng-click="swipe()">back index</div>',
                 controller: 'DianController'
             })
 

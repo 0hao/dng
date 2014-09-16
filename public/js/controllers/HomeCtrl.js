@@ -1,5 +1,6 @@
-angular.module('HomeCtrl', []).controller('HomeController', ['$scope', function($scope) {
-  console.log('HomeController')
+angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$state',function($scope,$state) {
+  console.log('HomeController');
+  console.log($state);
   // if(!lib.login.isLogin()) {
   //   lib.login.goLogin({
   //     hideType: "reload"
@@ -15,8 +16,10 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', function(
   }
 
   // 提交
-  $scope.save = function(a) {
-
+  $scope.swipe = function(e) {
+    console.log(e);
+    // location.href = '/dian';
+    console.log($state.href('/dian'));
     
 
   }
