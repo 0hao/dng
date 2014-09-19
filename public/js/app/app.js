@@ -28,3 +28,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
 // angular.module('ngApp', ['HomeCtrl']);
 angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl']);
+
+window.onpopstate = function(e){
+    console.log(e);
+}

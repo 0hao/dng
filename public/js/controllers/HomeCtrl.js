@@ -1,6 +1,18 @@
-angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$state',function($scope,$state) {
+angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootScope', '$state',function($scope, $rootScope, $state) {
   console.log('HomeController');
-  console.log($state);
+  
+
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+    // do something
+
+    console.log(event);
+    // console.log(toState);
+    // console.log(toParams);
+    // console.log(fromState);
+    // console.log(fromParams);
+    // event.preventDefault();
+  })
+
   // if(!lib.login.isLogin()) {
   //   lib.login.goLogin({
   //     hideType: "reload"
@@ -8,6 +20,7 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$state',
   // }
 
   // $scope.showContent = true;
+  console.log($state);
 
   $scope.form = {
     name: '',
@@ -17,9 +30,9 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$state',
 
   // 提交
   $scope.swipe = function(e) {
-    console.log(e);
+    // console.log(e);
     // location.href = '/dian';
-    console.log($state.href('/dian'));
+    $state.go('dian')
     
 
   }
