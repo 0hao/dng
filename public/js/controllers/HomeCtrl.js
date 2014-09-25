@@ -2,16 +2,16 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootSco
   console.log('HomeController');
   
 
-  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-    // do something
+  // $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+  //   // do something
 
-    console.log(event);
-    // console.log(toState);
-    // console.log(toParams);
-    // console.log(fromState);
-    // console.log(fromParams);
-    // event.preventDefault();
-  })
+  //   console.log(event);
+  //   // console.log(toState);
+  //   // console.log(toParams);
+  //   // console.log(fromState);
+  //   // console.log(fromParams);
+  //   // event.preventDefault();
+  // })
 
   // if(!lib.login.isLogin()) {
   //   lib.login.goLogin({
@@ -20,7 +20,7 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootSco
   // }
 
   // $scope.showContent = true;
-  console.log($state);
+  // console.log($state);
 
   $scope.form = {
     name: '',
@@ -32,7 +32,9 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootSco
   $scope.swipe = function(e) {
     // console.log(e);
     // location.href = '/dian';
-    $state.go('dian')
+    $state.go('dian',{}, {
+      // location: 'replace'
+    })
     
 
   }

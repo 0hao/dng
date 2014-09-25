@@ -4,21 +4,26 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
     function($stateProvider, $urlRouterProvider, $locationProvider) {
         // $urlRouterProvider.otherwise("/");
 
-        $stateProvider
-            .state('home', {
-                url: "/index",
-                template: 'index <div ng-click="swipe()">go dian</div>',
-                controller: 'HomeController'
-            });
+        $stateProvider.state('home', {
+            url: "/index",
+            template: 'index <div ng-click="swipe()">go dian</div>',
+            controller: 'HomeController'
+        });
 
         $urlRouterProvider.otherwise('/index');
 
         $stateProvider
             .state('dian', {
                 url: "/dian",
-                template: 'dian <div ng-click="swipe()">back index</div>',
+                template: 'dian <div ng-click="swipe()">go my</div>',
                 controller: 'DianController'
             })
+
+        $stateProvider.state('my', {
+            url: "/my",
+            template: 'my <div ng-click="swipe()">back index</div>',
+            controller: 'MyController'
+        });
 
         $locationProvider.html5Mode(true);
 
@@ -27,7 +32,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
 
 // angular.module('ngApp', ['HomeCtrl']);
-angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl']);
+angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'MyCtrl']);
 
 window.onpopstate = function(e){
     console.log(e);
