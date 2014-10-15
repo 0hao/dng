@@ -1,5 +1,7 @@
 angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootScope', '$state',function($scope, $rootScope, $state) {
   console.log('HomeController');
+
+  $rootScope.hlen = 'history.length: ' + history.length;
   
 
   // $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
