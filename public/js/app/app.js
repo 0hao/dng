@@ -43,11 +43,16 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
 
 // angular.module('ngApp', ['HomeCtrl']);
-angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'crumbService']).run(['$state', '$rootScope', 'crumbsFoo',
-    function($state, $rootScope, crumbsFoo) {
+angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'crumbService']).run(['$state', '$rootScope', 'crumbs', 'crumbsFoo',
+    function($state, $rootScope, crumbs, crumbsFoo) {
         var s_index = 0;
 
         var stopped = false;
+
+        var replace_s = {
+            'to': '',
+            'from': ''
+        };
 
         var navBackTarget = '';
 
@@ -55,7 +60,7 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
             var target = options.target,
                 params = options.params || {};
 
-            navBackTarget = options.navBack || undefined; // 指定新state的back目标
+            navBackTarget = options.navBack ? (target + '>>' + options.navBack) : ''; // 指定新state的back目标
 
             if(action == 'push') {
                 crumbsFoo.push(target);
@@ -72,9 +77,35 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
         }
 
 
-        $rootScope.navBack = function(e) {
-            // location.href = '/dian';
-            history.go(-1);
+        $rootScope.navBack = function() {
+            if($rootScope.focusBack) {
+                // 强制返回
+
+                // 计算位置
+                var crumb_index;
+                for (var i = 0, len = crumbs.v.length; i < len; i++) {
+
+                    if ($rootScope.focusBack == crumbs.v[i]) {
+                        crumb_index = len - i + 1;
+                        break;
+                    }
+                }
+
+                if(!crumb_index) {
+                    // focusBack不在crumb中
+                    replace_s = {
+                        'to': $rootScope.focusBack,
+                        'from': 'mydetail'
+                    }
+                    history.go(-1);
+                }
+                console.log(crumb_index);
+            }else{
+                // todo 后退
+                history.go(-1)
+            }
+            // console.log($rootScope.focusBack);
+            // history.go(-1);
             // var gohome = $state.go('home');
             
             // console.log($state.go('home'))
@@ -96,17 +127,21 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
             //     event.preventDefault();
             // }
 
-            // if (fromState.name == 'mydetail' && toState.name == 'item' && !stopped) {
-            //     stopped = true;
-            //     console.log('prev')
-            //     event.preventDefault();
+            if (replace_s.to && fromState.name == replace_s.from && !stopped) {
+                stopped = true;
+                console.log('prev')
+                event.preventDefault();
 
-            //     $state.go('my', {}, {
-            //         location: 'replace'
-            //     });
+                $state.go(replace_s.to, {}, {
+                    location: 'replace'
+                });
 
-            //     stopped = false;
-            // }
+                replace_s = {
+                    'to': ''
+                };
+
+                stopped = false;
+            }
 
             // if (fromState.name == 'my' && toState.name == 'dian' && !stopped) {
             //     stopped = true;
@@ -130,10 +165,18 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
             }
             s_index++;
 
-            $rootScope.focusBack = navBackTarget;
-            navBackTarget = '';
+            if(navBackTarget) {
+                var nbt_arr = navBackTarget.split('>>');
 
-            // console.log(event);
+                if(toState.name == nbt_arr[0]) {
+                    $rootScope.focusBack = nbt_arr[1];
+                }else{
+                    $rootScope.focusBack = '';
+                }
+            }else{
+                $rootScope.focusBack = '';
+            }
+
         });
     }
 ]);

@@ -1,0 +1,52 @@
+back（事件）
+
+data-back(toState)存在
+true
+  toState在crumb中
+  true
+    计算history go 步数
+
+    是否来自浏览器后退
+    true
+      go值+1
+
+    replace state
+    
+
+  false
+    history go -1，并 reaplce state
+
+false
+  是否来自浏览器后退
+  true
+    history.go(0)， 根据toState replace
+
+  false
+    history.go(-1)
+
+
+
+浏览器前进后退
+没有back标明，toState（history）在crumb中倒数第二
+true
+  后退 - 进入back（事件），history.go(-1) 已执行，传递toState
+
+false
+  前进
+
+
+更新crumb
+
+a b c d ['', a, b, e]
+    e ['', a, a]
+a
+
+b c d
+  e
+a
+
+
+
+a e c e c d
+      e
+a

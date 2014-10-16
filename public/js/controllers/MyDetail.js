@@ -1,18 +1,19 @@
-angular.module('MyDetailCtrl', []).controller('MyDetailController', ['$scope', '$rootScope', '$state', function($scope, $rootScope, $state) {
+angular.module('MyDetailCtrl', []).controller('MyDetailController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
 
-  console.log('MyDetailController');
-  
+        console.log('MyDetailController');
 
-  
+        // $rootScope.focusBack = 'my';
 
-  $scope.swipe = function(e) {
-    // console.log(e);
-    // location.href = '/dian';
-    history.go(-1);
-    // var gohome = $state.go('home');
-    
-    // console.log($state.go('home'))
+        $scope.swipe = function(e) {
+            // console.log(e);
+            // location.href = '/dian';
+            history.go(-1);
+            // var gohome = $state.go('home');
 
-  }
+            // console.log($state.go('home'))
 
-}]);
+        }
+
+    }
+]);
