@@ -1,53 +1,51 @@
-angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootScope', '$state',function($scope, $rootScope, $state) {
-  console.log('HomeController');
+angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
+        console.log('HomeController');
 
-  $rootScope.hlen = 'history.length: ' + history.length;
-  
+        $rootScope.hlen = 'history.length: ' + history.length;
 
-  // $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-  //   // do something
 
-  //   console.log(event);
-  //   // console.log(toState);
-  //   // console.log(toParams);
-  //   // console.log(fromState);
-  //   // console.log(fromParams);
-  //   // event.preventDefault();
-  // })
+        // $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+        //   // do something
 
-  // if(!lib.login.isLogin()) {
-  //   lib.login.goLogin({
-  //     hideType: "reload"
-  //   });
-  // }
+        //   console.log(event);
+        //   // console.log(toState);
+        //   // console.log(toParams);
+        //   // console.log(fromState);
+        //   // console.log(fromParams);
+        //   // event.preventDefault();
+        // })
 
-  // $scope.showContent = true;
-  // console.log($state);
+        // if(!lib.login.isLogin()) {
+        //   lib.login.goLogin({
+        //     hideType: "reload"
+        //   });
+        // }
 
-  $scope.form = {
-    name: '',
-    address: '',
-    phone: ''
-  }
+        // $scope.showContent = true;
+        // console.log($state);
 
-  // 提交
-  $scope.swipe = function(e) {
-    // console.log(e);
-    // location.href = '/dian';
-    $state.go('dian',{}, {
-      // location: 'replace'
-    })
-    
+        $scope.form = {
+            name: '',
+            address: '',
+            phone: ''
+        }
 
-  }
+        // 提交
+        $scope.swipe = function(e) {
+            $rootScope.rootSwipe('push', {
+                'target': 'dian'
+            });
+        }
 
-  // 表单重置
-  function formReset() {
-    $scope.form = {
-      name: '',
-      address: '',
-      phone: ''
+        // 表单重置
+        function formReset() {
+            $scope.form = {
+                name: '',
+                address: '',
+                phone: ''
+            }
+        }
+
     }
-  }
-
-}]);
+]);

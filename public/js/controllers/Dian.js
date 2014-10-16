@@ -1,17 +1,14 @@
-angular.module('DianCtrl', []).controller('DianController', ['$scope', '$rootScope', '$state', function($scope, $rootScope, $state) {
+angular.module('DianCtrl', []).controller('DianController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
 
-  console.log('DianController');
-  // console.log($rootScope)
+        console.log('DianController');
+        // console.log($rootScope)
 
-  $scope.swipe = function(e) {
-    // console.log(e);
-    // location.href = '/dian';
-    // history.go(-1);
-    $state.go('item',{}, {
-      // location: 'replace'
-    });
-    
+        $scope.swipe = function(e) {
+            $rootScope.rootSwipe('push', {
+                'target': 'item'
+            });
+        }
 
-  }
-
-}]);
+    }
+]);

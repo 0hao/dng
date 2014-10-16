@@ -43,41 +43,96 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
 
 // angular.module('ngApp', ['HomeCtrl']);
-angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl']).run(['$state', '$rootScope',
-    function($state, $rootScope) {
+angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'crumbService']).run(['$state', '$rootScope', 'crumbsFoo',
+    function($state, $rootScope, crumbsFoo) {
+        var s_index = 0;
 
         var stopped = false;
 
+        var navBackTarget = '';
+
+        $rootScope.rootSwipe = function(action, options) {
+            var target = options.target,
+                params = options.params || {};
+
+            navBackTarget = options.navBack || undefined; // 指定新state的back目标
+
+            if(action == 'push') {
+                crumbsFoo.push(target);
+                $state.go(target, params, {
+                  // location: 'replace'
+                });
+            }else if(action == 'back'){
+
+            }else if(action == 'replace'){
+                $state.go(target, data, {
+                  location: 'replace'
+                });
+            }
+        }
+
+
+        $rootScope.navBack = function(e) {
+            // location.href = '/dian';
+            history.go(-1);
+            // var gohome = $state.go('home');
+            
+            // console.log($state.go('home'))
+
+        }
+
+
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-            console.log('toState: ' + toState.name + '\n' + 'fromState: ' + fromState.name);
 
-            if (fromState.name == 'mydetail' && toState.name == 'item' && !stopped) {
-                stopped = true;
-                console.log('prev')
-                event.preventDefault();
+            // console.log(toState)
+            // console.log(fromParams)
 
-                $state.go('my', {}, {
-                    location: 'replace'
-                });
 
-                stopped = false;
-            }
+            console.log('stateChangeStart: '+'\n'+'toState: ' + toState.name + '\n' + 'fromState: ' + fromState.name);
+            // event.preventDefault();
 
-            if (fromState.name == 'my' && toState.name == 'dian' && !stopped) {
-                stopped = true;
-                console.log('prev')
-                event.preventDefault();
+            // if (fromState.name == 'dian' && toState.name == 'home' && !stopped) {
+            //     console.log('prev')
+            //     event.preventDefault();
+            // }
 
-                $state.go('index', {}, {
-                    location: 'replace'
-                });
+            // if (fromState.name == 'mydetail' && toState.name == 'item' && !stopped) {
+            //     stopped = true;
+            //     console.log('prev')
+            //     event.preventDefault();
 
-                stopped = false;
-            }
+            //     $state.go('my', {}, {
+            //         location: 'replace'
+            //     });
+
+            //     stopped = false;
+            // }
+
+            // if (fromState.name == 'my' && toState.name == 'dian' && !stopped) {
+            //     stopped = true;
+            //     console.log('prev')
+            //     event.preventDefault();
+
+            //     $state.go('index', {}, {
+            //         location: 'replace'
+            //     });
+
+            //     stopped = false;
+            // }
 
         });
 
         $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            // 初始化首个路径
+            console.log('stateChangeSuccess')
+            if(s_index === 0) {
+                crumbsFoo.push($state.current.name);
+            }
+            s_index++;
+
+            $rootScope.focusBack = navBackTarget;
+            navBackTarget = '';
+
             // console.log(event);
         });
     }
