@@ -4,7 +4,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
     function($stateProvider, $urlRouterProvider, $locationProvider) {
         // $urlRouterProvider.otherwise("/");
 
-        $stateProvider.state('home', {
+        $stateProvider.state('index', {
             url: "/index",
             template: 'index <div ng-click="swipe()">go dian</div>',
             controller: 'HomeController'
@@ -32,7 +32,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
         $stateProvider.state('mydetail', {
             url: "/mydetail",
-            template: 'detail <div ng-click="swipe()">back my</div>',
+            template: 'detail <div ng-click="navBack()">back my</div>',
             controller: 'MyDetailController'
         });
 
@@ -46,6 +46,8 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'crumbService']).run(['$state', '$rootScope', 'crumbs', 'crumbsFoo',
     function($state, $rootScope, crumbs, crumbsFoo) {
         var s_index = 0;
+
+        $rootScope.cv = JSON.stringify(crumbs);
 
         var stopped = false;
 
@@ -62,11 +64,19 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
 
             navBackTarget = options.navBack ? (target + '>>' + options.navBack) : ''; // 指定新state的back目标
 
+            
+
             if(action == 'push') {
-                crumbsFoo.push(target);
+                // 表明手动前进
+                crumbs.forward = true;
+                
                 $state.go(target, params, {
                   // location: 'replace'
                 });
+
+                setTimeout(function(){
+                    crumbsFoo.push(target);
+                }, 0)
             }else if(action == 'back'){
 
             }else if(action == 'replace'){
@@ -77,33 +87,82 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
         }
 
 
-        $rootScope.navBack = function() {
+        $rootScope.navBack = function(e, backToState) {
+            crumbs.back = true;
+            var pops;
             if($rootScope.focusBack) {
                 // 强制返回
 
                 // 计算位置
-                var crumb_index;
+                var back_len; //后退步数
                 for (var i = 0, len = crumbs.v.length; i < len; i++) {
 
                     if ($rootScope.focusBack == crumbs.v[i]) {
-                        crumb_index = len - i + 1;
+                        back_len = len - i - 1;
                         break;
                     }
                 }
+                
 
-                if(!crumb_index) {
+                if(!back_len) {
                     // focusBack不在crumb中
+
+                    if(!backToState) {
+                        // 非浏览器后退
+                        replace_s = {
+                            'to': $rootScope.focusBack,
+                            'from': $state.current.name
+                        }
+                        history.go(-1);
+                    }
+                    
+                    pops = 1;
+                }else{
+                    // toState在crumb中
+
+                    if(backToState) {
+                        // 来自浏览器后退
+                        event.preventDefault();
+                        back_len -=1;
+                        stopped = true
+                    }
+console.log(back_len)
                     replace_s = {
                         'to': $rootScope.focusBack,
-                        'from': 'mydetail'
+                        'from': $state.current.name
                     }
+
+                    if(back_len) {
+                        history.go(-back_len);
+                    }
+                    
+                    if(backToState) {
+                        pops = back_len + 1;
+                    }else{
+                        pops = back_len;
+                    }
+                    
+                }
+                
+            }else{
+                // 非强制返回
+
+                if(backToState) {
+                    // 来自浏览器后退
+                    // $state.go(backToState.name, {}, {
+                    //     location: 'replace'
+                    // });
+                }else{
                     history.go(-1);
                 }
-                console.log(crumb_index);
-            }else{
-                // todo 后退
-                history.go(-1)
+                
+                pops = 1;
+                
             }
+
+            setTimeout(function(){
+                crumbsFoo.pop(pops);
+            }, 0)
             // console.log($rootScope.focusBack);
             // history.go(-1);
             // var gohome = $state.go('home');
@@ -143,6 +202,27 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
                 stopped = false;
             }
 
+            
+            var prev_state = crumbs.v[crumbs.v.length-2];
+            if(!crumbs.forward && !crumbs.back && !stopped) {
+                if(toState.name == prev_state) {
+                    // 后退
+
+                    // if($rootScope.focusBack) {
+                    //     // 强制后退阻止默认
+                    //     event.preventDefault();
+                    // }
+                    
+                    console.log('后退');
+                    $rootScope.navBack(event, toState);
+                }else{
+                    // 前进
+                    console.log('前进');
+                    crumbsFoo.push(toState.name);
+                }
+            }
+            
+
             // if (fromState.name == 'my' && toState.name == 'dian' && !stopped) {
             //     stopped = true;
             //     console.log('prev')
@@ -161,7 +241,7 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
             // 初始化首个路径
             console.log('stateChangeSuccess')
             if(s_index === 0) {
-                crumbsFoo.push($state.current.name);
+                // crumbsFoo.push($state.current.name);
             }
             s_index++;
 

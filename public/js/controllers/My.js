@@ -1,23 +1,24 @@
-angular.module('MyCtrl', []).controller('MyController', ['$scope', '$rootScope', '$state', function($scope, $rootScope, $state) {
+angular.module('MyCtrl', []).controller('MyController', ['$scope', '$rootScope', '$state',
+    function($scope, $rootScope, $state) {
 
-  console.log('MyController');
+        console.log('MyController');
 
-  $scope.swipe = function(e) {
-    $state.go('detail',{}, {
-      // location: 'replace'
-    });
+        $scope.swipe = function(e) {
+            $rootScope.rootSwipe('push', {
+                'target': 'mydetail'
+            });
+        }
 
-  }
 
-  
-  // $scope.back = function(e) {
-  //   // console.log(e);
-  //   // location.href = '/dian';
-  //   history.go(-2);
-  //   // var gohome = $state.go('home');
-    
-  //   // console.log($state.go('home'))
+        // $scope.back = function(e) {
+        //   // console.log(e);
+        //   // location.href = '/dian';
+        //   history.go(-2);
+        //   // var gohome = $state.go('home');
 
-  // }
+        //   // console.log($state.go('home'))
 
-}]);
+        // }
+
+    }
+]);

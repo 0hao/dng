@@ -6,7 +6,8 @@ angular.module('DianCtrl', []).controller('DianController', ['$scope', '$rootSco
 
         $scope.swipe = function(e) {
             $rootScope.rootSwipe('push', {
-                'target': 'item'
+                'target': 'item',
+                'navBack': 'index'
             });
         }
 
