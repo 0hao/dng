@@ -1,9 +1,9 @@
 angular.module('MyDetailCtrl', []).controller('MyDetailController', ['$scope', '$rootScope', '$state',
     function($scope, $rootScope, $state) {
 
-        console.log('MyDetailController');
+        // console.log('MyDetailController');
 
-        // $rootScope.focusBack = 'my';
+        $rootScope.route.markBack('my');
 
         $scope.swipe = function(e) {
             // console.log(e);

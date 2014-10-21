@@ -1,13 +1,17 @@
 angular.module('ItemCtrl', []).controller('ItemController', ['$scope', '$rootScope', '$state',
     function($scope, $rootScope, $state) {
-
-        console.log('ItemController');
+        // console.log('ItemController');
         // console.log($rootScope)
+        // $rootScope.focusBack = 'dian';
+        $rootScope.route.markBack('dian');
 
         $scope.swipe = function(e) {
-            $rootScope.rootSwipe('push', {
+            $rootScope.route.swipe('push', {
                 'target': 'mydetail',
-                'navBack': 'my'
+                'focusBack': 'index',
+                'params': {
+                    'id': 'index'
+                }
             });
         }
 

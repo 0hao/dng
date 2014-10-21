@@ -1,6 +1,6 @@
 angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootScope', '$state',
     function($scope, $rootScope, $state) {
-        console.log('HomeController');
+        // console.log('HomeController');
 
         $rootScope.hlen = 'history.length: ' + history.length;
 
@@ -33,7 +33,7 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootSco
 
         // 提交
         $scope.swipe = function(e) {
-            $rootScope.rootSwipe('push', {
+            $rootScope.route.swipe('push', {
                 'target': 'dian'
             });
         }

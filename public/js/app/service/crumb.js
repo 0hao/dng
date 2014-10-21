@@ -15,10 +15,15 @@ angular.module('crumbService', []).value('crumbs', {
         // return thisIsPrivate;
     };
 
-    this.pop = function(len) {
+    this.pop = function(len, sub_crumb) {
+        if(sub_crumb) len++;
+
         for (var i = 0; i < len; i++) {
             crumbs.v.pop();
         }
+
+        if(sub_crumb) crumbs.v.push(sub_crumb);
+
         crumbs.back = false;
         console.log(crumbs);
     };

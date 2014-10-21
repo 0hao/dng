@@ -7,7 +7,8 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
         $stateProvider.state('index', {
             url: "/index",
             template: 'index <div ng-click="swipe()">go dian</div>',
-            controller: 'HomeController'
+            controller: 'HomeController',
+            data: {}
         });
 
         $urlRouterProvider.otherwise('/index');
@@ -15,25 +16,29 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
         $stateProvider.state('dian', {
             url: "/dian",
             template: 'dian <div ng-click="swipe()">go detail</div>',
-            controller: 'DianController'
+            controller: 'DianController',
+            data: {}
         });
 
         $stateProvider.state('item', {
             url: "/item",
             template: 'detail <div ng-click="swipe()">go mydetail</div>',
-            controller: 'ItemController'
+            controller: 'ItemController',
+            data: {}
         });
 
         $stateProvider.state('my', {
             url: "/my",
             template: 'my <div ng-click="swipe()">go detail</div><br><div ng-click="back()">back index</div>',
-            controller: 'MyController'
+            controller: 'MyController',
+            data: {}
         });
 
         $stateProvider.state('mydetail', {
-            url: "/mydetail",
+            url: "/mydetail?id",
             template: 'detail <div ng-click="navBack()">back my</div>',
-            controller: 'MyDetailController'
+            controller: 'MyDetailController',
+            data: {}
         });
 
         $locationProvider.html5Mode(true);
@@ -58,117 +63,153 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
 
         var navBackTarget = '';
 
-        $rootScope.rootSwipe = function(action, options) {
-            var target = options.target,
-                params = options.params || {};
+        $rootScope.route = {
+            /*
+             * 点击切换
+             */
+            focusBack: '',
 
-            navBackTarget = options.navBack ? (target + '>>' + options.navBack) : ''; // 指定新state的back目标
+            /*
+             * 点击切换
+             */
+            swipe: function(action, options) {
+                var target = options.target,
+                    params = options.params || {};
 
-            
+                // 接受指定的back目标
+                navBackTarget = options.focusBack ? (target + '>>' + options.focusBack) : ''; 
 
-            if(action == 'push') {
-                // 表明手动前进
-                crumbs.forward = true;
                 
-                $state.go(target, params, {
-                  // location: 'replace'
-                });
 
-                setTimeout(function(){
-                    crumbsFoo.push(target);
-                }, 0)
-            }else if(action == 'back'){
+                if(action == 'push') {
+                    // 表明手动前进
+                    crumbs.forward = true;
+                    
+                    $state.go(target, params, {
+                      // location: 'replace'
+                    });
 
-            }else if(action == 'replace'){
-                $state.go(target, data, {
-                  location: 'replace'
-                });
-            }
-        }
+                    setTimeout(function(){
+                        crumbsFoo.push(target);
+                    }, 0)
+                }else if(action == 'back'){
 
-
-        $rootScope.navBack = function(e, backToState) {
-            crumbs.back = true;
-            var pops;
-            if($rootScope.focusBack) {
-                // 强制返回
-
-                // 计算位置
-                var back_len; //后退步数
-                for (var i = 0, len = crumbs.v.length; i < len; i++) {
-
-                    if ($rootScope.focusBack == crumbs.v[i]) {
-                        back_len = len - i - 1;
-                        break;
-                    }
+                }else if(action == 'replace'){
+                    $state.go(target, params, {
+                      location: 'replace'
+                    });
                 }
-                
+            },
 
-                if(!back_len) {
-                    // focusBack不在crumb中
+            /*
+             * 标记左上角返回按钮目标
+             */
+            markBack: function(subBack) {
+                this.focusBack = $state.current.data.focusBack || subBack;
+            },
 
-                    if(!backToState) {
-                        // 非浏览器后退
+            /*
+             * 导航返回（包括左上角）
+             */
+            navBack: function(e, backToState) {
+                var _this = this;
+
+                crumbs.back = true;
+                var pops, sub_crumb;
+                if(_this.focusBack) {
+                    // 强制返回
+
+                    // 计算位置
+                    var back_len; //后退步数
+                    for (var i = 0, len = crumbs.v.length; i < len; i++) {
+
+                        if (_this.focusBack == crumbs.v[i]) {
+                            back_len = len - i - 1;
+                            break;
+                        }
+                    }
+                    
+
+                    if(!back_len) {
+                        // focusBack不在crumb中
+
+                        if(!backToState) {
+                            // 非浏览器后退
+
+                            if(crumbs.v.length <=1) {
+                                // 没有可后退记录，则replace
+                                console.log(back_len);
+                                _this.swipe('replace', {
+                                    target: _this.focusBack
+                                });
+                            }else{
+                                // 
+                                replace_s = {
+                                    'to': _this.focusBack,
+                                    'from': $state.current.name
+                                }
+                                history.go(-1);
+                            }
+                            
+                        }
+
+                        // 要替换面包屑
+                        sub_crumb = _this.focusBack;
+
+                        pops = 1;
+                    }else{
+                        // toState在crumb中
+
+                        if(backToState) {
+                            // 来自浏览器后退
+                            event.preventDefault();
+                            back_len -=1;
+                            stopped = true
+                        }
+
                         replace_s = {
-                            'to': $rootScope.focusBack,
+                            'to': _this.focusBack,
                             'from': $state.current.name
                         }
+
+                        if(back_len) {
+                            history.go(-back_len);
+                        }
+                        
+                        if(backToState) {
+                            pops = back_len + 1;
+                        }else{
+                            pops = back_len;
+                        }
+                        
+                    }
+                    
+                }else{
+                    // 非强制返回
+
+                    if(backToState) {
+                        // 来自浏览器后退
+                        // $state.go(backToState.name, {}, {
+                        //     location: 'replace'
+                        // });
+                    }else{
                         history.go(-1);
                     }
                     
                     pops = 1;
-                }else{
-                    // toState在crumb中
-
-                    if(backToState) {
-                        // 来自浏览器后退
-                        event.preventDefault();
-                        back_len -=1;
-                        stopped = true
-                    }
-console.log(back_len)
-                    replace_s = {
-                        'to': $rootScope.focusBack,
-                        'from': $state.current.name
-                    }
-
-                    if(back_len) {
-                        history.go(-back_len);
-                    }
-                    
-                    if(backToState) {
-                        pops = back_len + 1;
-                    }else{
-                        pops = back_len;
-                    }
                     
                 }
-                
-            }else{
-                // 非强制返回
 
-                if(backToState) {
-                    // 来自浏览器后退
-                    // $state.go(backToState.name, {}, {
-                    //     location: 'replace'
-                    // });
-                }else{
-                    history.go(-1);
-                }
+                setTimeout(function(){
+                    crumbsFoo.pop(pops, sub_crumb);
+                }, 0)
+                // console.log($rootScope.focusBack);
+                // history.go(-1);
+                // var gohome = $state.go('home');
                 
-                pops = 1;
-                
+                // console.log($state.go('home'))
+
             }
-
-            setTimeout(function(){
-                crumbsFoo.pop(pops);
-            }, 0)
-            // console.log($rootScope.focusBack);
-            // history.go(-1);
-            // var gohome = $state.go('home');
-            
-            // console.log($state.go('home'))
-
         }
 
 
@@ -176,8 +217,6 @@ console.log(back_len)
 
             // console.log(toState)
             // console.log(fromParams)
-
-
             console.log('stateChangeStart: '+'\n'+'toState: ' + toState.name + '\n' + 'fromState: ' + fromState.name);
             // event.preventDefault();
 
@@ -188,7 +227,7 @@ console.log(back_len)
 
             if (replace_s.to && fromState.name == replace_s.from && !stopped) {
                 stopped = true;
-                console.log('prev')
+                console.warn('prev & replace')
                 event.preventDefault();
 
                 $state.go(replace_s.to, {}, {
@@ -214,12 +253,14 @@ console.log(back_len)
                     // }
                     
                     console.log('后退');
-                    $rootScope.navBack(event, toState);
+                    $rootScope.route.navBack(event, toState);
                 }else{
                     // 前进
                     console.log('前进');
                     crumbsFoo.push(toState.name);
                 }
+
+                stopped = false;
             }
             
 
@@ -249,12 +290,14 @@ console.log(back_len)
                 var nbt_arr = navBackTarget.split('>>');
 
                 if(toState.name == nbt_arr[0]) {
-                    $rootScope.focusBack = nbt_arr[1];
+                    // $rootScope.focusBack = nbt_arr[1];
+
+                    toState.data.focusBack = nbt_arr[1];
                 }else{
-                    $rootScope.focusBack = '';
+                    // $rootScope.focusBack = '';
                 }
             }else{
-                $rootScope.focusBack = '';
+                // $rootScope.focusBack = '';
             }
 
         });
