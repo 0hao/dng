@@ -15,7 +15,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
         $stateProvider.state('dian', {
             url: "/dian",
-            template: 'dian <div ng-click="swipe()">go detail</div>',
+            template: 'dian <div ng-click="swipe()">go item</div>',
             controller: 'DianController',
             data: {}
         });
@@ -161,26 +161,54 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
                         // toState在crumb中
 
                         if(backToState) {
-                            // 来自浏览器后退
-                            event.preventDefault();
-                            back_len -=1;
-                            stopped = true
-                        }
+                            // 来自浏览器后退：已执行一次history.go(-1)
 
+                            // 剩余路径减一
+                            back_len -=1;
+                        }
+                        console.log(back_len)
+                        if(back_len && backToState) {
+                            // 还有剩余的后退记录
+
+                            // 防止重复stateChange
+                            stopped = true;
+
+                            // 更新state的from项
+                            // replace_s = {
+                            //     'to': _this.focusBack,
+                            //     'from': backToState.name
+                            // }
+                        }
+                        
+                        // 点击后退
                         replace_s = {
                             'to': _this.focusBack,
                             'from': $state.current.name
                         }
+                        
 
                         if(back_len) {
+                            // 执行剩余后退，进入stateChange监听
                             history.go(-back_len);
+                        }else{
+                            // 不会再执行stateChange 所以需要重置标记
+                            replace_s = {
+                                'to': '',
+                            }
+                            stopped = false;
+
+                            _this.swipe('replace', {
+                                target: _this.focusBack
+                            });
                         }
                         
                         if(backToState) {
+                            // 因为执行过 history.go(-1) ，所以面包屑回删增加一条
                             pops = back_len + 1;
                         }else{
                             pops = back_len;
                         }
+
                         
                     }
                     
@@ -224,33 +252,39 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
             //     console.log('prev')
             //     event.preventDefault();
             // }
-
+console.log(JSON.stringify(replace_s) +' '+fromState.name)
             if (replace_s.to && fromState.name == replace_s.from && !stopped) {
                 stopped = true;
                 console.warn('prev & replace')
                 event.preventDefault();
 
-                $state.go(replace_s.to, {}, {
-                    location: 'replace'
-                });
+                var to = replace_s.to;
 
                 replace_s = {
                     'to': ''
                 };
+                
+
+                $state.go(to, {}, {
+                    location: 'replace'
+                });
 
                 stopped = false;
+
+                console.log('gogogogo');
+                return
             }
 
-            
+            console.warn(stopped)
             var prev_state = crumbs.v[crumbs.v.length-2];
             if(!crumbs.forward && !crumbs.back && !stopped) {
                 if(toState.name == prev_state) {
                     // 后退
 
-                    // if($rootScope.focusBack) {
-                    //     // 强制后退阻止默认
-                    //     event.preventDefault();
-                    // }
+                    if($rootScope.route.focusBack) {
+                        // 强制后退阻止默认
+                        event.preventDefault();
+                    }
                     
                     console.log('后退');
                     $rootScope.route.navBack(event, toState);

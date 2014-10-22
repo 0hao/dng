@@ -1,5 +1,6 @@
 angular.module('DianCtrl', []).controller('DianController', ['$scope', '$rootScope', '$state',
     function($scope, $rootScope, $state) {
+        console.warn('dian')
 
         // console.log('DianController');
         $rootScope.route.markBack('index');
