@@ -138,7 +138,6 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
 
                             if(crumbs.v.length <=1) {
                                 // 没有可后退记录，则replace
-                                console.log(back_len);
                                 _this.swipe('replace', {
                                     target: _this.focusBack
                                 });
@@ -166,7 +165,9 @@ angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'Item
                             // 剩余路径减一
                             back_len -=1;
                         }
-                        console.log(back_len)
+
+                        console.warn('back_len: ' + back_len);
+
                         if(back_len && backToState) {
                             // 还有剩余的后退记录
 
