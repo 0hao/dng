@@ -1,12 +1,12 @@
 'use strict';
 
 /*
- * ddState
+ * state
  */
-angular.module('ddState', ['crumbService']).service('ddStateServuce', ['$state', '$rootScope', 'crumbs', 'crumbsFoo',
+angular.module('state', ['crumbService']).service('ddStateServuce', ['$state', '$rootScope', 'crumbs', 'crumbsFoo',
     function($state, $rootScope, crumbs, crumbsFoo) {
 
-        $rootScope.cv = JSON.stringify(crumbs);
+        // $rootScope.cv = JSON.stringify(crumbs);
 
         // 锁定stateChange
         var stateChangeLock = false;
@@ -282,7 +282,13 @@ angular.module('ddState', ['crumbService']).service('ddStateServuce', ['$state',
 
                 if (toState.name == nbt_arr[0]) {
                     // 记录到state
-                    toState.data && ( toState.data.focusBack = nbt_arr[1] );
+                    if(toState.data) {
+                        toState.data.focusBack = nbt_arr[1]
+                    }else{
+                        toState.data = {
+                            focusBack: nbt_arr[1]
+                        }
+                    }
                 }
             }
 

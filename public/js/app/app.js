@@ -47,7 +47,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 ]);
 
 
-angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'ddState']).run(['ddStateServuce' ,
+angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'state']).run(['ddStateServuce' ,
     function() {
         console.log('run')
     }
