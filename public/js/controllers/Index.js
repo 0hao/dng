@@ -31,13 +31,6 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootSco
             phone: ''
         }
 
-        // 提交
-        $scope.swipe = function(e) {
-            $rootScope.route.swipe('push', {
-                'target': 'dian'
-            });
-        }
-
         // 表单重置
         function formReset() {
             $scope.form = {

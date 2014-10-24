@@ -3,7 +3,7 @@ angular.module('MyDetailCtrl', []).controller('MyDetailController', ['$scope', '
 
         // console.log('MyDetailController');
 
-        $rootScope.route.markBack('my');
+        $rootScope.state.markBack('my');
 
         $scope.swipe = function(e) {
             // console.log(e);

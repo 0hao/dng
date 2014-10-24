@@ -1,12 +1,12 @@
 angular.module('MyCtrl', []).controller('MyController', ['$scope', '$rootScope', '$state',
     function($scope, $rootScope, $state) {
 
-        $rootScope.route.markBack('index');
+        $rootScope.state.markBack('index');
 
         // console.log('MyController');
 
         $scope.swipe = function(e) {
-            $rootScope.route.swipe('push', {
+            $rootScope.state.go('push', {
                 'target': 'mydetail'
             });
         }

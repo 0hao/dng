@@ -3,10 +3,10 @@ angular.module('DianCtrl', []).controller('DianController', ['$scope', '$rootSco
         console.warn('dian')
 
         // console.log('DianController');
-        $rootScope.route.markBack('index');
+        $rootScope.state.markBack('index');
 
         $scope.swipe = function(e) {
-            $rootScope.route.swipe('push', {
+            $rootScope.state.go('push', {
                 'target': 'item',
                 'focusBack': 'index'
             });

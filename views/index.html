@@ -40,7 +40,7 @@
     <!-- <ui-view>载入中...</ui-view> -->
     <div class="wrap">
       <div class="title">
-        <div ng-click="route.navBack()" data-back="{{route.focusBack}}" class="back">back</div>
+        <div ng-click="state.back()" data-back="{{state.focusBack}}" class="back">back</div>
         <div class="options">more</div>
         <h1>title</h1>
       </div>
@@ -65,6 +65,7 @@
 <script src="/js/controllers/My.js"></script>
 <script src="/js/controllers/MyDetail.js"></script>
 
+<script src="/js/app/service/ddState.js"></script>
 <script src="/js/app/service/crumb.js"></script>
 
 <script src="/js/app/app.js"></script>
