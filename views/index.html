@@ -40,9 +40,9 @@
     <!-- <ui-view>载入中...</ui-view> -->
     <div class="wrap">
       <div class="title">
-        <div ng-click="state.back()" data-back="{{state.focusBack}}" class="back">back</div>
-        <div class="options">more</div>
-        <h1>title</h1>
+        <div ng-show="state.header.focusBack" ng-click="state.back()" data-back="{{state.header.focusBack}}" class="back">back</div>
+        <div ng-bind-html-unsafe="expression" class="options" ng-show="state.header.options" ng-bind-html="state.header.options"></div>
+        <h1 ng-bind="state.header.title"></h1>
       </div>
         
         <div ui-view></div>
@@ -55,7 +55,9 @@
 </div>
 </script>
 
-<script src="http://g.tbcdn.cn/dd/recommend/1.0.5/libs/??angular/angular.js,angular/angular-ui-router.js"></script>
+<script src="/js/angular/angular/angular.js"></script>
+<script src="/js/angular/angular-ui-router/angular-ui-router.js"></script>
+<script src="/js/angular/angular-sanitize/angular-sanitize.js"></script>
 <script src="http://a.tbcdn.cn/g/mtb/??lib-mtop/1.1.9/mtop.js,lib-login/1.1.2/login.debug.js,lib-login/1.1.2/widget.debug.js"></script>
 
 

@@ -41,13 +41,13 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
             data: {}
         });
 
-        $locationProvider.html5Mode(true);
+        // $locationProvider.html5Mode(true);
 
     }
 ]);
 
 
-angular.module('ngApp', ['ui.router', 'appRoutes', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'state']).run(['stateService' ,
+angular.module('ngApp', ['ui.router', 'appRoutes', 'ngSanitize', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'state']).run(['stateService' ,
     function() {
         console.log('run')
     }

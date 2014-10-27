@@ -2,7 +2,11 @@ angular.module('HomeCtrl', []).controller('HomeController', ['$scope', '$rootSco
     function($scope, $rootScope, $state) {
         // console.log('HomeController');
 
-        $rootScope.hlen = 'history.length: ' + history.length;
+        $rootScope.state.setHeader({
+            'back': '',
+            'title': '首页',
+            'options': ['<div class="search">搜索</div>']
+        });
 
 
         // $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 

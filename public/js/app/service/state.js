@@ -19,10 +19,13 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
         var navBackTarget = '';
 
         $rootScope.state = {
-            'focusBack': '',
             'go': go,
             'back': back,
-            'markBack': markBack
+            'header': {
+                'focusBack': '',
+                'title': ''
+            },
+            'setHeader': setHeader
         };
 
         /*
@@ -61,8 +64,20 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
          * 优先取state携带的focusBack，否则取备选subBack
          * @ subBack: 备选返回目标
          */
-        function markBack(subBack) {
-            this.focusBack = $state.current.data.focusBack || subBack;
+        function setHeader(params) {
+            console.log(this)
+            this.header.focusBack = $state.current.data.focusBack || params.back;
+            this.header.title = params.title;
+
+            var options = params.options;
+            if(options && options.length) {
+                var opt_html_arr = [];
+                for(var i=0,len=options.length;i<len;i++) {
+                    opt_html_arr.push(options[i]);
+                }
+
+                this.header.options = opt_html_arr.join('');
+            }
         }
 
         /*
@@ -73,14 +88,14 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
 
             crumbs.back = true;
             var pops, sub_crumb;
-            if (_this.focusBack) {
+            if (_this.header.focusBack) {
                 // 强制返回
 
                 // 计算位置
                 var back_len; //后退步数
                 for (var i = 0, len = crumbs.v.length; i < len; i++) {
 
-                    if (_this.focusBack == crumbs.v[i]) {
+                    if (_this.header.focusBack == crumbs.v[i]) {
                         back_len = len - i - 1;
                         break;
                     }
@@ -96,12 +111,12 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
                         if (crumbs.v.length <= 1) {
                             // 没有可后退记录，则replace
                             _this.go('replace', {
-                                target: _this.focusBack
+                                target: _this.header.focusBack
                             });
                         } else {
                             // 
                             replace_s = {
-                                'to': _this.focusBack,
+                                'to': _this.header.focusBack,
                                 'from': $state.current.name
                             }
                             history.go(-1);
@@ -110,7 +125,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
                     }
 
                     // 要替换面包屑
-                    sub_crumb = _this.focusBack;
+                    sub_crumb = _this.header.focusBack;
 
                     pops = 1;
                 } else {
@@ -140,7 +155,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
 
                     // 点击后退
                     replace_s = {
-                        'to': _this.focusBack,
+                        'to': _this.header.focusBack,
                         'from': $state.current.name
                     }
 
@@ -156,7 +171,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
                         stateChangeLock = false;
 
                         _this.go('replace', {
-                            target: _this.focusBack
+                            target: _this.header.focusBack
                         });
                     }
 
@@ -238,7 +253,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
                 if (toState.name == prev_state) {
                     // 后退
 
-                    if ($rootScope.state.focusBack) {
+                    if ($rootScope.state.header.focusBack) {
                         // 强制后退阻止默认
                         event.preventDefault();
                     }
