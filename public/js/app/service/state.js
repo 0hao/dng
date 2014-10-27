@@ -3,7 +3,7 @@
 /*
  * state
  */
-angular.module('state', ['crumbService']).service('ddStateServuce', ['$state', '$rootScope', 'crumbs', 'crumbsFoo',
+angular.module('state', ['crumbService']).service('stateService', ['$state', '$rootScope', 'crumbs', 'crumbsFoo',
     function($state, $rootScope, crumbs, crumbsFoo) {
 
         // $rootScope.cv = JSON.stringify(crumbs);
