@@ -40,7 +40,7 @@
     <!-- <ui-view>载入中...</ui-view> -->
     <div class="wrap">
       <div class="title">
-        <div ng-show="state.header.focusBack" ng-click="state.back()" data-back="{{state.header.focusBack}}" class="back">back</div>
+        <div ng-show="state.header.focusBack" state-back="{{state.header.focusBack}}" data-back="{{state.header.focusBack}}" class="back">back</div>
         <div ng-bind-html-unsafe="expression" class="options" ng-show="state.header.options" ng-bind-html="state.header.options"></div>
         <h1 ng-bind="state.header.title"></h1>
       </div>

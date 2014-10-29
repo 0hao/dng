@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
+angular.module('appRoutes', ['state']).config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
     function($stateProvider, $urlRouterProvider, $locationProvider) {
         // $urlRouterProvider.otherwise("/");
 
         $stateProvider.state('index', {
             url: "/index",
-            template: 'index <div ng-click="state.go(\'push\', {\'target\': \'dian\'});">go dian</div>',
+            template: 'index <div state-go="dian"><span>go dian</span></div>',
             controller: 'HomeController',
             data: {}
         });
@@ -15,7 +15,7 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 
         $stateProvider.state('dian', {
             url: "/dian",
-            template: 'dian <div ng-click="swipe()">go item</div>',
+            template: 'dian <div ng-click="swipe()">go item</div> <div ng-back="{{state.header.focusBack}}">back</div>',
             controller: 'DianController',
             data: {}
         });
@@ -47,8 +47,8 @@ angular.module('appRoutes', []).config(['$stateProvider', '$urlRouterProvider', 
 ]);
 
 
-angular.module('ngApp', ['ui.router', 'appRoutes', 'ngSanitize', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl', 'state']).run(['stateService' ,
+angular.module('ngApp', ['ui.router', 'appRoutes', 'state', 'ngSanitize', 'HomeCtrl', 'DianCtrl', 'ItemCtrl', 'MyCtrl', 'MyDetailCtrl']).run(['stateService' ,
     function() {
         console.log('run')
     }
-]);
+])

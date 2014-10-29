@@ -3,8 +3,10 @@
 /*
  * state
  */
-angular.module('state', ['crumbService']).service('stateService', ['$state', '$rootScope', 'crumbs', 'crumbsFoo',
-    function($state, $rootScope, crumbs, crumbsFoo) {
+angular.module('state', ['crumbService']).value('obj', {
+    navBackTarget: ''
+}).service('stateService', ['$state', '$rootScope', '$timeout', 'obj', 'crumbs', 'crumbsFoo', 
+    function($state, $rootScope, $timeout, obj, crumbs, crumbsFoo) {
 
         // $rootScope.cv = JSON.stringify(crumbs);
 
@@ -16,7 +18,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
             'from': ''
         };
 
-        var navBackTarget = '';
+        // var obj.navBackTarget = '';
 
         $rootScope.state = {
             'go': go,
@@ -36,7 +38,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
                 params = options.params || {};
 
             // 记录指定的focusBack目标, stateChangeSuccess时用
-            navBackTarget = options.focusBack ? (target + '>>' + options.focusBack) : '';
+            obj.navBackTarget = options.focusBack ? (target + '>>' + options.focusBack) : '';
 
 
             if (action == 'push') {
@@ -70,9 +72,9 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
             this.header.title = params.title;
 
             var options = params.options;
-            if(options && options.length) {
+            if (options && options.length) {
                 var opt_html_arr = [];
-                for(var i=0,len=options.length;i<len;i++) {
+                for (var i = 0, len = options.length; i < len; i++) {
                     opt_html_arr.push(options[i]);
                 }
 
@@ -201,7 +203,7 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
 
             }
 
-            setTimeout(function() {
+            $timeout(function() {
                 crumbsFoo.pop(pops, sub_crumb);
             }, 0)
             // console.log($rootScope.focusBack);
@@ -283,23 +285,23 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
             // }
 
         });
-    
+
         /*
          * state切换完成，执行在controller触发前
-        */
+         */
         $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
             // 初始化首个路径
             console.log('stateChangeSuccess')
 
             // go() 里记录的返回
-            if (navBackTarget) {
-                var nbt_arr = navBackTarget.split('>>');
+            if (obj.navBackTarget) {
+                var nbt_arr = obj.navBackTarget.split('>>');
 
                 if (toState.name == nbt_arr[0]) {
                     // 记录到state
-                    if(toState.data) {
+                    if (toState.data) {
                         toState.data.focusBack = nbt_arr[1]
-                    }else{
+                    } else {
                         toState.data = {
                             focusBack: nbt_arr[1]
                         }
@@ -310,4 +312,32 @@ angular.module('state', ['crumbService']).service('stateService', ['$state', '$r
         });
 
     }
-])
+]).directive("stateGo", ['$rootScope',
+    function($rootScope) {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs) {
+                element.bind("click", function(){
+                    
+                    var _attrs = attrs.stateGo.split(',');
+
+                    $rootScope.state.go('push', {
+                        'target': _attrs[0]
+                    });
+
+                });
+            }
+        }
+    }
+]).directive("stateBack", ['$state', '$rootScope', 'stateService', 'obj', 'crumbs', 'crumbsFoo',
+    function($state, $rootScope, stateService, obj, crumbs, crumbsFoo) {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs) {
+                element.bind("click", function() {
+                    console.log($state)
+                });
+            }
+        }
+    }
+]);

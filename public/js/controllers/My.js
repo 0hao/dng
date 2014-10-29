@@ -1,7 +1,10 @@
 angular.module('MyCtrl', []).controller('MyController', ['$scope', '$rootScope', '$state',
     function($scope, $rootScope, $state) {
 
-        $rootScope.state.markBack('index');
+        $rootScope.state.setHeader({
+            'back': 'index',
+            'title': 'dian'
+        });
 
         // console.log('MyController');
 

@@ -3,7 +3,10 @@ angular.module('ItemCtrl', []).controller('ItemController', ['$scope', '$rootSco
         // console.log('ItemController');
         // console.log($rootScope)
         // $rootScope.focusBack = 'dian';
-        $rootScope.state.markBack('dian');
+        $rootScope.state.setHeader({
+            'back': 'index',
+            'title': 'dian'
+        });
 
         $scope.swipe = function(e) {
             $rootScope.state.go('push', {

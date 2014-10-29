@@ -3,7 +3,10 @@ angular.module('MyDetailCtrl', []).controller('MyDetailController', ['$scope', '
 
         // console.log('MyDetailController');
 
-        $rootScope.state.markBack('my');
+        $rootScope.state.setHeader({
+            'back': 'index',
+            'title': 'dian'
+        });
 
         $scope.swipe = function(e) {
             // console.log(e);

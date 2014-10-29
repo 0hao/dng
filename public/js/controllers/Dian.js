@@ -2,8 +2,10 @@ angular.module('DianCtrl', []).controller('DianController', ['$scope', '$rootSco
     function($scope, $rootScope, $state) {
         console.warn('dian')
 
-        // console.log('DianController');
-        $rootScope.state.markBack('index');
+        $rootScope.state.setHeader({
+            'back': 'index',
+            'title': 'dian'
+        });
 
         $scope.swipe = function(e) {
             $rootScope.state.go('push', {
